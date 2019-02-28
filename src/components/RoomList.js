@@ -1,29 +1,61 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-class RoomList extends Component {
+class RoomList extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-      rooms: []
+      rooms: [],
+      newRoomName: ''
     };
-    this.roomsRef = this.props.firebase.database().ref('rooms');
+    this.roomsRef = this.props.firebase.database().ref("rooms");
   }
 
   componentDidMount() {
-     this.roomsRef.on('child_added', snapshot => {
-       const room = snapshot.val();
-       room.key = snapshot.key;
-       this.setState({ rooms: this.state.rooms.concat( room ) })
-     });
-   }
+    this.roomsRef.on("child_added", snapshot => {
+      const room = snapshot.val();
+      room.key = snapshot.key;
+      this.setState({ rooms: this.state.rooms.concat(room) });
+    });
+  }
+
+  createRooms(newRoomName) {
+    this.roomsRef.push({
+      name: newRoomName
+    });
+  };
+
+  handleChange(e) {
+    this.setState( { newRoomName: e.target.value } )
+  }
 
   render() {
     return (
-      <ul className='room-list'>
-      {this.state.rooms.map((room) =>
-        <li key={room.key}>{room.name}</li>
-      )}
-      </ul>
+      <React.Fragment>
+        <div>
+          {this.state.rooms.map((room, i) => (
+            <p key={i}>Name: {room.name}</p>
+          ))}
+        </div>
+
+        <div className="new-room-form">
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            this.createRooms(this.state.newRoomName);
+            }
+          }>
+          <label for="roomName">Room Name: </label>
+          <input
+            type="text"
+            id="roomName"
+            value={ this.state.newRoomName }
+            onChange={ (e) => this.handleChange(e) }
+            />
+          <input
+            type="submit"
+          />
+          </form>
+        </div>
+      </React.Fragment>
     );
   }
 }
