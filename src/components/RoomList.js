@@ -1,61 +1,71 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
-class RoomList extends React.Component {
-  constructor(props) {
+class RoomList extends Component {
+  constructor(props){
     super(props);
+
     this.state = {
       rooms: [],
       newRoomName: ''
     };
-    this.roomsRef = this.props.firebase.database().ref("rooms");
+
+    this.roomsRef = this.props.firebase.database().ref('rooms');
   }
 
   componentDidMount() {
-    this.roomsRef.on("child_added", snapshot => {
+    this.roomsRef.on('child_added', snapshot => {
       const room = snapshot.val();
       room.key = snapshot.key;
+
+      console.log(`From componentDidMount in RoomList: room.key is: ${room.key}`);
+
       this.setState({ rooms: this.state.rooms.concat(room) });
     });
   }
 
-  createRooms(newRoomName) {
-    this.roomsRef.push({
-      name: newRoomName
-    });
-  };
+  handleChange(event) {
+    this.setState({ newRoomName: event.target.value });
+  }
 
-  handleChange(e) {
-    this.setState( { newRoomName: e.target.value } )
+  createRoom(event) {
+    event.preventDefault();
+    const newRoom = this.state.newRoomName;
+    this.roomsRef.push({
+      name: newRoom
+    });
+    const emptyString = '';
+    this.setState({ newRoomName: emptyString });
   }
 
   render() {
-    return (
-      <React.Fragment>
-        <div>
-          {this.state.rooms.map((room, i) => (
-            <p key={i}>Name: {room.name}</p>
-          ))}
-        </div>
+    return(
+      <nav className="container">
+        <h1>Bloc Chat</h1>
+        {
+          this.state.rooms.map((room, index) =>
+            <a
+              key={ room.key }
+              onClick={
+                      (key) => this.props.setActiveRoom(room.key)
+                      }
+              href="#">
+              <h3>{ room.name }</h3>
+            </a>
+          )
+        }
 
-        <div className="new-room-form">
-          <form onSubmit={(e) => {
-            e.preventDefault();
-            this.createRooms(this.state.newRoomName);
-            }
-          }>
-          <label for="roomName">Room Name: </label>
+        <form onSubmit={ (event) => this.createRoom(event) }>
+          <label>
+            Create a New Room:
+          </label>
           <input
             type="text"
-            id="roomName"
             value={ this.state.newRoomName }
-            onChange={ (e) => this.handleChange(e) }
-            />
-          <input
-            type="submit"
+            onChange={ (event) => this.handleChange(event) }
           />
-          </form>
-        </div>
-      </React.Fragment>
+          <input type="submit" value="Create Room" />
+        </form>
+      </nav>
     );
   }
 }

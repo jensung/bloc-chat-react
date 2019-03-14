@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import * as firebase from 'firebase';
 import RoomList from './components/RoomList';
+import MessageList from './components/MessageList';
 
   var config = {
     apiKey: "AIzaSyBu-dYd6QndVWDDnUg95mBaLnWO-XwH5kk",
@@ -14,17 +14,35 @@ import RoomList from './components/RoomList';
   };
   firebase.initializeApp(config);
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-      <header>
-      <h2>Bloc Chat</h2>
-      </header>
-        <RoomList firebase={firebase} />
-      </div>
-    );
-  }
-}
+  class App extends Component {
+    constructor() {
+      super();
 
-export default App;
+      this.state = {
+        activeRoom: ''
+      };
+    }
+    
+    setActiveRoom(key) {
+      const newActiveRoom = key;
+      this.setState({ activeRoom: newActiveRoom });
+    }
+
+    render() {
+      return (
+        <div className="App">
+          <RoomList
+            firebase={ firebase }
+            activeRoom={ this.state.activeRoom }
+            setActiveRoom={ (key) => this.setActiveRoom(key) }
+          />
+          <MessageList
+            firebase={ firebase }
+            activeRoom={ this.state.activeRoom }
+          />
+        </div>
+      );
+    }
+  }
+
+  export default App;
