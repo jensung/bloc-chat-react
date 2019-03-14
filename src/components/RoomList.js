@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
+import User from './User';
 
 class RoomList extends Component {
   constructor(props){
     super(props);
-
     this.state = {
       rooms: [],
       newRoomName: ''
     };
-
     this.roomsRef = this.props.firebase.database().ref('rooms');
   }
 
@@ -16,8 +15,6 @@ class RoomList extends Component {
     this.roomsRef.on('child_added', snapshot => {
       const room = snapshot.val();
       room.key = snapshot.key;
-
-      console.log(`From componentDidMount in RoomList: room.key is: ${room.key}`);
 
       this.setState({ rooms: this.state.rooms.concat(room) });
     });

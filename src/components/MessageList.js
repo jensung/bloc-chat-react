@@ -3,11 +3,9 @@ import React, { Component } from 'react';
 class MessageList extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       messages: []
     };
-
     this.messageRef = this.props.firebase.database().ref('messages');
   }
 
@@ -15,9 +13,6 @@ class MessageList extends Component {
     this.messageRef.on('child_added', snapshot => {
       const message = snapshot.val();
       message.key = snapshot.key;
-
-      console.log(`From compoentnDidMount in MessageList: message.key is: ${message.key}`);
-
       this.setState({ messages: this.state.messages.concat(message) });
     });
   }
@@ -35,9 +30,9 @@ class MessageList extends Component {
 
   render() {
     return(
-      <div>
-        {
-          this.state.messages.map((message, index) =>
+      <div className="messages">
+      <h3>{ this.props.activeRoomName }</h3>
+        { this.state.messages.map((message, index) =>
             this.displayRoomMessage(message, index)
           )
         }

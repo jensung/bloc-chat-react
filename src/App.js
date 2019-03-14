@@ -3,6 +3,7 @@ import './App.css';
 import * as firebase from 'firebase';
 import RoomList from './components/RoomList';
 import MessageList from './components/MessageList';
+import User from './components/User';
 
   var config = {
     apiKey: "AIzaSyBu-dYd6QndVWDDnUg95mBaLnWO-XwH5kk",
@@ -17,20 +18,31 @@ import MessageList from './components/MessageList';
   class App extends Component {
     constructor() {
       super();
-
       this.state = {
-        activeRoom: ''
+        activeRoom: '',
+        user: ''
       };
+      this.setActiveRoom = this.setActiveRoom.bind(this);
+      this.setUser = this.setUser.bind(this);
     }
-    
+
     setActiveRoom(key) {
       const newActiveRoom = key;
       this.setState({ activeRoom: newActiveRoom });
     }
 
+    setUser(user) {
+        this.setState({ user: user });
+    }
+
     render() {
       return (
         <div className="App">
+          <User
+            firebase={ firebase }
+            user={ this.state.user }
+            setUser={ this.setUser }
+          />
           <RoomList
             firebase={ firebase }
             activeRoom={ this.state.activeRoom }
@@ -39,6 +51,8 @@ import MessageList from './components/MessageList';
           <MessageList
             firebase={ firebase }
             activeRoom={ this.state.activeRoom }
+            activeRoomId={ this.state.activeRoomId }
+            user={ this.state.currentUser }
           />
         </div>
       );
