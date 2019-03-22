@@ -6,6 +6,7 @@ class MessageList extends Component {
     super(props);
     this.state = {
       messages: [],
+      newMessage: null,
     };
     this.messageRef = this.props.firebase.database().ref('messages');
   }
@@ -16,6 +17,10 @@ class MessageList extends Component {
       message.key = snapshot.key;
       this.setState({ messages: this.state.messages.concat(message) });
     });
+  }
+
+  handleChange(e) {
+    this.setState({ newMessageContent: e.target.value });
   }
 
   displayRoomMessage(message, index) {
@@ -29,21 +34,21 @@ class MessageList extends Component {
       );
     }}
 
-  render() {
-    return(
-      <div className="message-container">
-        <div className="messages">
-        <h3>{ this.props.activeRoomName }</h3>
-          { this.state.messages.map((message, index) =>
-            this.displayRoomMessage(message, index)
-          )}
-        </div>
-        <CreateMessage
-          firebase={ this.props.firebase }
-          activeRoom={ this.props.activeRoom }
-          user={ this.props.user }
-        />
-        </div>
+    render() {
+      return(
+        <div className="message-container">
+          <div className="messages">
+          <h3>{ this.props.activeRoomName }</h3>
+            { this.state.messages.map((message, index) =>
+              this.displayRoomMessage(message, index)
+            )}
+          </div>
+          <CreateMessage
+            firebase={ this.props.firebase }
+            activeRoom={ this.props.activeRoom }
+            user={ this.props.user }
+          />
+          </div>
     );
   }
 }
