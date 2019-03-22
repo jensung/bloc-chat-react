@@ -6,7 +6,8 @@ class RoomList extends Component {
     super(props);
     this.state = {
       rooms: [],
-      newRoomName: ''
+      newRoomName: '',
+      roomID: ''
     };
     this.roomsRef = this.props.firebase.database().ref('rooms');
   }
@@ -38,6 +39,12 @@ class RoomList extends Component {
     return(
       <nav className="container">
         <h1>Bloc Chat</h1>
+        <User
+        firebase={ this.props.firebase }
+        user={ this.props.user }
+        userName={ this.props.userName }
+        setUser={ (user) => this.props.setUser(user) }
+        />
         {
           this.state.rooms.map((room, index) =>
             <a

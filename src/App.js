@@ -38,21 +38,18 @@ import User from './components/User';
     render() {
       return (
         <div className="App">
-          <User
-            firebase={ firebase }
-            user={ this.state.user }
-            setUser={ this.setUser }
-          />
           <RoomList
             firebase={ firebase }
             activeRoom={ this.state.activeRoom }
             setActiveRoom={ (key) => this.setActiveRoom(key) }
+            user={ this.state.user }
+            setUser={ (user) => this.setUser(user) }
           />
           <MessageList
             firebase={ firebase }
             activeRoom={ this.state.activeRoom }
             activeRoomId={ this.state.activeRoomId }
-            user={ this.state.currentUser }
+            user={ this.state.user }
           />
         </div>
       );

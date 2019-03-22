@@ -34,8 +34,8 @@ class User extends Component {
 
   render() {
     return(
-      <div>
-        <h3>{ this.displayGuest(this.props.user) }</h3>
+      <div className="userNameContainer">
+        { this.displayGuest(this.props.user) }
         <button onClick={ () => this.signIn() }>Sign In</button>
         <button onClick={ () => this.signOut() }>Sign Out</button>
       </div>
